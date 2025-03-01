@@ -251,7 +251,6 @@ void render_logo(void) {
 
 void oled_write_layer_state(void) {
 
-    oled_write_P(PSTR(" "), false);
     // int cpi = pointing_device_get_cpi();
     int cpi = cpi_array[cocot_config.cpi_idx];
     int scroll_div = scrl_div_array[cocot_config.scrl_div];
@@ -259,45 +258,43 @@ void oled_write_layer_state(void) {
     
     switch (get_highest_layer(layer_state | default_layer_state)) {
         case 0:
-            oled_write_P(PSTR("Base "), false);
+            oled_write_P(PSTR(" Base "), false);
             break;
         case 1:
-            oled_write_P(PSTR("Lower"), false);
+            oled_write_P(PSTR(" Lower"), false);
             break;
         case 2:
-            oled_write_P(PSTR("Raise"), false);
+            oled_write_P(PSTR(" Raise"), false);
             break;
         case 3:
-            oled_write_P(PSTR("Mouse"), false);
+            oled_write_P(PSTR(" Mouse"), false);
             break;
         case 4:
-            oled_write_P(PSTR("L4   "), false);
+            oled_write_P(PSTR(" L4   "), false);
             break;
         case 5:
-            oled_write_P(PSTR("L5   "), false);
+            oled_write_P(PSTR(" L5   "), false);
             break;
         case 6:
-            oled_write_P(PSTR("L6   "), false);
+            oled_write_P(PSTR(" L6   "), false);
             break;
         default:
-            oled_write_P(PSTR("Undef"), false);
+            oled_write_P(PSTR(" Undef"), false);
             break;
     }
-    oled_write_P(PSTR("/"), false);
     if (cocot_get_scroll_mode()){
-        oled_write_P(PSTR("S"), false);
+        oled_write_P(PSTR("/S/"), false);
     } else{
-        oled_write_P(PSTR("C"), false);
+        oled_write_P(PSTR("/C/"), false);
     }
-    oled_write_P(PSTR("/"), false);
     oled_write(get_u8_str(cpi / 10, ' '), false);
     oled_write_P(PSTR("0/"), false);
     oled_write(get_u8_str(scroll_div, ' ') + 1, false);
-    oled_write_P(PSTR("/"), false);
     if (angle < 0) {
-        oled_write_P(PSTR("-"), false);
+        oled_write_P(PSTR("/-"), false);
         oled_write(get_u8_str(-angle, ' ') + 1, false);
     } else {
+        oled_write_P(PSTR("/"), false);
         oled_write(get_u8_str(angle, ' '), false);
     }
 }
