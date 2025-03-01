@@ -257,13 +257,6 @@ void oled_write_layer_state(void) {
     int scroll_div = scrl_div_array[cocot_config.scrl_div];
     int angle = angle_array[cocot_config.rotation_angle];
     
-    char buf1[5];
-    char buf2[3];
-    char buf3[4];
-    snprintf(buf1, 5, "%4d", cpi);
-    snprintf(buf2, 3, "%2d", scroll_div);
-    snprintf(buf3, 4, "%3d", angle);
-
     switch (get_highest_layer(layer_state | default_layer_state)) {
         case 0:
             oled_write_P(PSTR("Base "), false);
@@ -297,11 +290,16 @@ void oled_write_layer_state(void) {
         oled_write_P(PSTR("C"), false);
     }
     oled_write_P(PSTR("/"), false);
-    oled_write(buf1, false);
+    oled_write(get_u8_str(cpi / 10, ' '), false);
+    oled_write_P(PSTR("0/"), false);
+    oled_write(get_u8_str(scroll_div, ' ') + 1, false);
     oled_write_P(PSTR("/"), false);
-    oled_write(buf2, false);
-    oled_write_P(PSTR("/"), false);
-    oled_write(buf3, false);
+    if (angle < 0) {
+        oled_write_P(PSTR("-"), false);
+        oled_write(get_u8_str(-angle, ' ') + 1, false);
+    } else {
+        oled_write(get_u8_str(angle, ' '), false);
+    }
 }
 
 #endif
