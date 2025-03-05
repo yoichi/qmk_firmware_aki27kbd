@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 #include "quantum.h"
+#include "os_detection.h"
 
 
 // Defines names for use in layer keycodes and the keymap
@@ -32,9 +33,10 @@ enum layer_number {
 };
 
 
-#define LW_SPC LT(1,KC_SPC)  // lower
-#define RS_ENT LT(2,KC_ENT)  // raise
-#define DEL_ALT ALT_T(KC_DEL)
+enum custom_user_keycodes {
+    IME_TGL = QK_USER_0,
+};
+
 
 /*
 #define CPI_SW USER00
@@ -49,14 +51,14 @@ enum layer_number {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
- LT(2,KC_TAB),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                          KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,LT(1,KC_EQL),
+ LT(2,KC_TAB),    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                                          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, LT(1,KC_EQL),
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                          KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN,RCTL_T(KC_MINS),
+LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                          KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, RCTL_T(KC_MINS),
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        KC_LALT, KC_LGUI,    LW_SPC, KC_BTN1, KC_LNG2,                   KC_LNG1, KC_BSPC,  RS_ENT, KC_RGUI,RALT_T(KC_ESC),
-                                                                 KC_PGUP, KC_MS_BTN3,    KC_PGDN, XXXXXXX, XXXXXXX, XXXXXXX
+                   KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      IME_TGL,                KC_BTN2, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
+                                                                 XXXXXXX, KC_MS_BTN3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
   [_LOWER] = LAYOUT(
@@ -67,8 +69,8 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______, _______,_______,S(KC_HOME),S(KC_END),KC_DEL,                                       KC_QUOT, KC_BSLS, _______, _______, KC_CAPS, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        _______, KC_HOME, _______,  KC_END,      _______,                _______, _______,   TT(3), _______, _______,
-                                                                 _______,    _______,    _______, XXXXXXX, XXXXXXX, XXXXXXX
+                        _______, KC_HOME, _______,  KC_END,      KC_LNG2,                KC_LNG1, _______,   TT(3), _______, _______,
+                                                                 XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
   [_RAISE] = LAYOUT(
@@ -80,7 +82,7 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
       _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                  S(KC_QUOT),S(KC_BSLS), _______, _______, _______, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                         _______, KC_BTN2,   TT(3), _______,      _______,                _______, _______, _______, _______, _______,
-                                                                 _______,    _______,    _______, XXXXXXX, XXXXXXX, XXXXXXX
+                                                                 XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
   [_TRACKBALL] = LAYOUT(
@@ -92,20 +94,21 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
       _______,RWIN(KC_1),RWIN(KC_2),RWIN(KC_3),RWIN(KC_4),KC_PGDN,             RWIN(KC_LEFT),RWIN(KC_DOWN),RWIN(KC_UP),RWIN(KC_RGHT), _______, KC_MUTE,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                         _______, _______, _______, _______,      _______,                _______, _______, _______, _______, _______,
-                                                                 _______,    _______,    _______, XXXXXXX, XXXXXXX, XXXXXXX
+                                                                 XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
   [_Layer4] = LAYOUT(
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, RGB_TOG,                                       SCRL_TO,  CPI_SW, SCRL_SW, ROT_L15, ROT_R15, XXXXXXX,
-  //|------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, RGB_VAI, RGB_SAI, RGB_HUI, RGB_MOD,                                       SCRL_MO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, RGB_VAD, RGB_SAD, RGB_HUD,RGB_RMOD,                                       SCRL_IN, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      QK_BOOT, XXXXXXX, RGB_VAI, RGB_SAI, RGB_HUI, RGB_MOD,                                       SCRL_MO, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  EE_CLR,
+  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+      XXXXXXX, XXXXXXX, RGB_VAD, RGB_SAD, RGB_HUD,RGB_RMOD,                                       SCRL_IN, XXXXXXX, AG_LSWP, AG_LNRM, XXXXXXX, XXXXXXX,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                         _______, _______, _______, _______,      _______,                _______, _______, _______, _______, _______,
-                                                                 _______,    _______,    _______, XXXXXXX, XXXXXXX, XXXXXXX
+                                                                 XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
+#if 0
     ),
   [_Layer5] = LAYOUT(
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
@@ -130,18 +133,21 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
                         XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,             XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,
                                                                  XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
+#endif
     )
 };
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
-    [1] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
-    [2] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
+    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [1] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD) },
+    [2] = { ENCODER_CCW_CW(MS_WHLR, MS_WHLL) },
     [3] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
-    [4] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
-    [5] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
-    [6] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
+    [4] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI) },
+#if 0
+    [5] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
+    [6] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
+#endif
 };
 #endif
 
@@ -191,3 +197,121 @@ bool oled_task_user(void) {
 }
 #endif
 
+#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+uint32_t os_detect_callback(uint32_t trigger_time, void *cb_arg) {
+#if defined(MAGIC_ENABLE)
+    keymap_config.raw = eeconfig_read_keymap();
+#endif
+    switch (detected_host_os()) {
+        case OS_WINDOWS:
+            cocot_config.scrl_inv = 1;
+            eeconfig_update_kb(cocot_config.raw);
+#if defined(MAGIC_ENABLE)
+            keymap_config.swap_lalt_lgui = true;
+            keymap_config.swap_ralt_rgui = false;
+#endif
+            break;
+        case OS_MACOS:
+            cocot_config.scrl_inv = -1;
+            eeconfig_update_kb(cocot_config.raw);
+#if defined(MAGIC_ENABLE)
+            keymap_config.swap_lalt_lgui = false;
+            keymap_config.swap_ralt_rgui = false;
+#endif
+            break;
+        default:
+            break;
+    }
+#if defined(MAGIC_ENABLE)
+    eeconfig_update_keymap(keymap_config.raw);
+#endif
+    return 0;
+}
+#endif
+
+void keyboard_post_init_user(void) {
+#ifdef CONSOLE_ENABLE
+    debug_enable = true;
+#endif
+#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+    defer_exec(400, os_detect_callback, NULL);
+#endif
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+        case IME_TGL:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(KC_RALT);
+                    wait_ms(TAP_CODE_DELAY);
+                    tap_code16(KC_GRV);
+                    unregister_code16(KC_RALT);
+                }
+                return false;
+            case OS_MACOS:
+                if (record->event.pressed) {
+                    register_code16(G(KC_SPC));
+                } else {
+                    unregister_code16(G(KC_SPC));
+                }
+                return false;
+            default:
+                break;
+            }
+            break;
+#endif
+        case KC_BSPC:
+            // https://docs.qmk.fm/feature_advanced_keycodes#shift-backspace-for-delete
+            {
+                // Initialize a boolean variable that keeps track
+                // of the delete key status: registered or not?
+                static bool delkey_registered;
+                uint8_t mod_state = get_mods();
+                if (record->event.pressed) {
+                    // Detect the activation of either shift keys
+                    if (mod_state & MOD_MASK_SHIFT) {
+                        // First temporarily canceling both shifts so that
+                        // shift isn't applied to the KC_DEL keycode
+                        del_mods(MOD_MASK_SHIFT);
+                        register_code(KC_DEL);
+                        // Update the boolean variable to reflect the status of KC_DEL
+                        delkey_registered = true;
+                        // Reapplying modifier state so that the held shift key(s)
+                        // still work even after having tapped the Backspace/Delete key.
+                        set_mods(mod_state);
+                        return false;
+                    }
+                } else { // on release of KC_BSPC
+                    // In case KC_DEL is still being sent even after the release of KC_BSPC
+                    if (delkey_registered) {
+                        unregister_code(KC_DEL);
+                        delkey_registered = false;
+                        return false;
+                    }
+                }
+            }
+            break;
+        case MS_WHLU:
+        case MS_WHLD:
+            if (cocot_config.scrl_inv < 0) {
+                extern void register_mouse(uint8_t mouse_keycode, bool pressed);
+                register_mouse(keycode == MS_WHLU ? MS_WHLD : MS_WHLU, record->event.pressed);
+                return false;
+            }
+            break;
+        case MS_WHLL:
+        case MS_WHLR:
+            if (cocot_config.scrl_inv < 0) {
+                extern void register_mouse(uint8_t mouse_keycode, bool pressed);
+                register_mouse(keycode == MS_WHLL ? MS_WHLR : MS_WHLL, record->event.pressed);
+                return false;
+            }
+            break;
+        default:
+            break;
+    }
+    return true;
+}
