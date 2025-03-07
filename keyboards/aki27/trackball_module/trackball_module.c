@@ -112,7 +112,7 @@ report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
         }
 
         // Accumulate scroll values
-        if (cocot_config.scrl_inv) {
+        if (cocot_config.scrl_inv > 0) {
             h_acm += smoothed_x;
             v_acm -= smoothed_y;
         } else {
