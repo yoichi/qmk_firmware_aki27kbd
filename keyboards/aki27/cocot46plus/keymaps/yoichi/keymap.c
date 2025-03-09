@@ -108,7 +108,6 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
                         _______, _______, _______, _______,      _______,                _______, _______, _______, _______, _______,
                                                                  XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
-#if 0
     ),
   [_Layer5] = LAYOUT(
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
@@ -133,7 +132,6 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
                         XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,             XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,
                                                                  XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
-#endif
     )
 };
 
@@ -144,10 +142,8 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(MS_WHLR, MS_WHLL) },
     [3] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
     [4] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI) },
-#if 0
     [5] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
     [6] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
-#endif
 };
 #endif
 

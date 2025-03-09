@@ -1,5 +1,3 @@
 #pragma once
 
 #define NO_ACTION_ONESHOT
-#undef DYNAMIC_KEYMAP_LAYER_COUNT
-#define DYNAMIC_KEYMAP_LAYER_COUNT 5
