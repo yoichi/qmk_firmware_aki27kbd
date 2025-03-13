@@ -57,7 +57,7 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                   KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      IME_TGL,                KC_BTN2, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
+                   KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      KC_BTN2,                IME_TGL, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
                                                                  XXXXXXX, KC_MS_BTN3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
