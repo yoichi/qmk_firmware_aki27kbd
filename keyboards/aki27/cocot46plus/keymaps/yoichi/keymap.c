@@ -242,7 +242,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case OS_WINDOWS:
                 if (record->event.pressed) {
                     register_code16(KC_RALT);
-                    wait_ms(TAP_CODE_DELAY);
+                    wait_ms(10);
                     tap_code16(KC_GRV);
                     unregister_code16(KC_RALT);
                 }
