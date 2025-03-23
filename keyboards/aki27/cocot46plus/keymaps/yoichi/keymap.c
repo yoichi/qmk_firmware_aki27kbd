@@ -35,6 +35,8 @@ enum layer_number {
 
 enum custom_user_keycodes {
     IME_TGL = QK_USER_0,
+    ZOOM_IN = QK_USER_1,
+    ZOOM_OUT = QK_USER_2,
 };
 
 
@@ -140,7 +142,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [1] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD) },
     [2] = { ENCODER_CCW_CW(MS_WHLR, MS_WHLL) },
-    [3] = { ENCODER_CCW_CW(KC_PGUP, KC_PGDN) },
+    [3] = { ENCODER_CCW_CW(ZOOM_OUT, ZOOM_IN) },
     [4] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI) },
     [5] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
     [6] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
@@ -252,6 +254,46 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code16(G(KC_SPC));
                 } else {
                     unregister_code16(G(KC_SPC));
+                }
+                return false;
+            default:
+                break;
+            }
+            break;
+        case ZOOM_IN:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(C(KC_EQL));
+                } else {
+                    unregister_code16(C(KC_EQL));
+                }
+                return false;
+            case OS_MACOS:
+                if (record->event.pressed) {
+                    register_code16(G(KC_EQL));
+                } else {
+                    unregister_code16(G(KC_EQL));
+                }
+                return false;
+            default:
+                break;
+            }
+            break;
+        case ZOOM_OUT:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(C(KC_MINS));
+                } else {
+                    unregister_code16(C(KC_MINS));
+                }
+                return false;
+            case OS_MACOS:
+                if (record->event.pressed) {
+                    register_code16(G(KC_MINS));
+                } else {
+                    unregister_code16(G(KC_MINS));
                 }
                 return false;
             default:
