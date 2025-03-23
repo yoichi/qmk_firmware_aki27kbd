@@ -250,14 +250,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
                 return false;
             case OS_MACOS:
+            default:
                 if (record->event.pressed) {
                     register_code16(G(KC_SPC));
                 } else {
                     unregister_code16(G(KC_SPC));
                 }
                 return false;
-            default:
-                break;
             }
             break;
         case ZOOM_IN:
@@ -270,14 +269,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
                 return false;
             case OS_MACOS:
+            default:
                 if (record->event.pressed) {
                     register_code16(G(KC_EQL));
                 } else {
                     unregister_code16(G(KC_EQL));
                 }
                 return false;
-            default:
-                break;
             }
             break;
         case ZOOM_OUT:
@@ -290,14 +288,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 }
                 return false;
             case OS_MACOS:
+            default:
                 if (record->event.pressed) {
                     register_code16(G(KC_MINS));
                 } else {
                     unregister_code16(G(KC_MINS));
                 }
                 return false;
-            default:
-                break;
             }
             break;
 #endif
