@@ -265,7 +265,7 @@ void keyboard_post_init_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
+#if defined(OS_DETECTION_ENABLE)
         case IME_TGL:
             switch (detected_host_os()) {
             case OS_WINDOWS:
