@@ -377,3 +377,110 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     }
     return true;
 }
+
+#ifndef ENCODER_MAP_ENABLE
+#ifdef VIA_DUMMY_KEY_FOR_ENCODER
+keyevent_t encoder1_ccw = {
+    .key = (keypos_t){.row = 4, .col = 2},
+    .pressed = false,
+    .type = KEY_EVENT
+};
+
+keyevent_t encoder1_cw = {
+    .key = (keypos_t){.row = 4, .col = 5},
+    .pressed = false,
+    .type = KEY_EVENT
+};
+
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (index != 0) {
+        return true;
+    }
+
+    if (clockwise) {
+        encoder1_cw.pressed = true;
+        encoder1_cw.time = (timer_read() | 1);
+        action_exec(encoder1_cw);
+    } else {
+        encoder1_ccw.pressed = true;
+        encoder1_ccw.time = (timer_read() | 1);
+        action_exec(encoder1_ccw);
+    }
+    return false;
+}
+
+void matrix_scan_user(void) {
+    if (encoder1_ccw.pressed) {
+        encoder1_ccw.pressed = false;
+        encoder1_ccw.time = (timer_read() | 1);
+        action_exec(encoder1_ccw);
+    }
+
+    if (encoder1_cw.pressed) {
+        encoder1_cw.pressed = false;
+        encoder1_cw.time = (timer_read() | 1);
+        action_exec(encoder1_cw);
+    }
+}
+#else // !VIA_DUMMY_KEY_FOR_ENCODER
+bool encoder_update_user(uint8_t index, bool clockwise) {
+    if (index != 0) {
+        return true;
+    }
+
+    layer_state_t layer = get_highest_layer(layer_state | default_layer_state);
+    uint16_t keycode;
+    if (clockwise) {
+        switch (layer) {
+            case 1:
+                keycode = MS_WHLD;
+                break;
+            case 2:
+                keycode = MS_WHLL;
+                break;
+            case 3:
+#if defined(OS_DETECTION_ENABLE)
+                if (detected_host_os() == OS_WINDOWS) {
+                    keycode = C(KC_EQL);
+                    break;
+                }
+#endif
+                keycode = G(KC_EQL);
+                break;
+            case 4:
+                // RGB_HUI cannot be handled by tap_code16_delay
+                rgblight_increase_hue();
+                return false;
+            default:
+                return true; // need process in encoder_update_kb
+        }
+    } else { // counter clockwise
+        switch (layer) {
+            case 1:
+                keycode = MS_WHLU;
+                break;
+            case 2:
+                keycode = MS_WHLR;
+                break;
+            case 3:
+#if defined(OS_DETECTION_ENABLE)
+                if (detected_host_os() == OS_WINDOWS) {
+                    keycode = C(KC_MINS);
+                    break;
+                }
+#endif
+                keycode = G(KC_MINS);
+                break;
+            case 4:
+                // RGB_HUD cannot be handled by tap_code16_delay
+                rgblight_decrease_hue();
+                return false;
+            default:
+                return true; // need process in encoder_update_kb
+         }
+    }
+    tap_code16_delay(keycode, 10);
+    return false;
+}
+#endif
+#endif // ENCODER_MAP_ENABLE
