@@ -40,15 +40,38 @@ enum custom_user_keycodes {
 };
 
 
-/*
-#define CPI_SW USER00
-#define SCRL_SW USER01
-#define ROT_R15 USER02
-#define ROT_L15 USER03
-#define SCRL_MO USER04
-#define SCRL_TO USER05
-#define SCRL_IN USER06
-*/
+#ifdef TAP_DANCE_ENABLE
+// Tap Dance
+enum {
+    TD_S_IME,
+};
+
+void dance_s_ime_finished(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        register_code16(KC_RSFT);
+    } else if (detected_host_os() == OS_WINDOWS) {
+        register_code16(KC_RALT);
+        wait_ms(10);
+        tap_code16(KC_GRV);
+        unregister_code16(KC_RALT);
+    } else {
+        register_code16(G(KC_SPC));
+    }
+}
+
+void dance_s_ime_reset(tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+        unregister_code16(KC_RSFT);
+    } else if (detected_host_os() == OS_WINDOWS) {
+    } else {
+        unregister_code16(G(KC_SPC));
+    }
+}
+
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_S_IME] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_s_ime_finished, dance_s_ime_reset),
+};
+#endif // TAP_DANCE_ENABLE
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_BASE] = LAYOUT(
@@ -57,7 +80,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
 LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                          KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, RCTL_T(KC_MINS),
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+#ifdef TAP_DANCE_ENABLE
+      KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, TD(TD_S_IME),
+#else
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
+#endif
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                    KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      KC_BTN2,                IME_TGL, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
                                                                  XXXXXXX, KC_MS_BTN3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
