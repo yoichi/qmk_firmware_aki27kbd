@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifndef COCOT_SCROLL_DIVIDERS
-#    define COCOT_SCROLL_DIVIDERS { 1, 2, 3, 4, 5, 6 }
+#    define COCOT_SCROLL_DIVIDERS { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 #endif
 #ifndef COCOT_SCROLL_DIV_DEFAULT
 #    define COCOT_SCROLL_DIV_DEFAULT 4
