@@ -68,6 +68,7 @@ void pointing_device_init_kb(void) {
 }
 
 
+#ifndef COCOT_SUPPORT_ARBITRARY_ROTATION
 static double sin_degree(int16_t angle) {
     double v[] = {
         0,                           // 0
@@ -98,6 +99,7 @@ static double cos_degree(int16_t angle) {
     }
     return v[i];
 }
+#endif
 
 
 report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
@@ -110,9 +112,15 @@ report_mouse_t pointing_device_task_kb(report_mouse_t mouse_report) {
     float sensitivity_multiplier = 1.5; // Sensitivity adjustment multiplier
 
     // Apply rotation angle adjustment
+#ifndef COCOT_SUPPORT_ARBITRARY_ROTATION
     int16_t angle = -angle_array[cocot_config.rotation_angle];
     float rotated_x = mouse_report.x * cos_degree(angle) - mouse_report.y * sin_degree(angle);
     float rotated_y = mouse_report.x * sin_degree(angle) + mouse_report.y * cos_degree(angle);
+#else
+    double rad = (double)angle_array[cocot_config.rotation_angle] * (M_PI / 180) * -1;
+    float rotated_x = mouse_report.x * cos(rad) - mouse_report.y * sin(rad);
+    float rotated_y = mouse_report.x * sin(rad) + mouse_report.y * cos(rad);
+#endif
 
     // Apply smoothing to the rotated values
     float smoothed_x = prev_x * smoothing_factor + rotated_x * (1.0 - smoothing_factor);
