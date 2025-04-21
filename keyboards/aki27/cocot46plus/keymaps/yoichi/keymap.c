@@ -55,7 +55,10 @@ void dance_s_ime_finished(tap_dance_state_t *state, void *user_data) {
         tap_code16(KC_GRV);
         unregister_code16(KC_RALT);
     } else {
-        register_code16(G(KC_SPC));
+        register_code16(KC_LGUI);
+        wait_ms(10);
+        tap_code16(KC_SPC);
+        unregister_code16(KC_LGUI);
     }
 }
 
@@ -64,7 +67,6 @@ void dance_s_ime_reset(tap_dance_state_t *state, void *user_data) {
         unregister_code16(KC_RSFT);
     } else if (detected_host_os() == OS_WINDOWS) {
     } else {
-        unregister_code16(G(KC_SPC));
     }
 }
 
@@ -295,9 +297,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             case OS_MACOS:
             default:
                 if (record->event.pressed) {
-                    register_code16(G(KC_SPC));
-                } else {
-                    unregister_code16(G(KC_SPC));
+                    register_code16(KC_LGUI);
+                    wait_ms(10);
+                    tap_code16(KC_SPC);
+                    unregister_code16(KC_LGUI);
                 }
                 return false;
             }
