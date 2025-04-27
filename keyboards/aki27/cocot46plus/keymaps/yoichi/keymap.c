@@ -240,12 +240,12 @@ bool oled_task_user(void) {
 }
 #endif
 
-#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
-uint32_t os_detect_callback(uint32_t trigger_time, void *cb_arg) {
+#if defined(OS_DETECTION_ENABLE)
+bool process_detected_host_os_user(os_variant_t detected_os) {
 #if defined(MAGIC_ENABLE)
     keymap_config.raw = eeconfig_read_keymap();
 #endif
-    switch (detected_host_os()) {
+    switch (detected_os) {
         case OS_WINDOWS:
             cocot_config.scrl_inv = 1;
             eeconfig_update_kb(cocot_config.raw);
@@ -275,9 +275,6 @@ uint32_t os_detect_callback(uint32_t trigger_time, void *cb_arg) {
 void keyboard_post_init_user(void) {
 #ifdef CONSOLE_ENABLE
     debug_enable = true;
-#endif
-#if defined(OS_DETECTION_ENABLE) && defined(DEFERRED_EXEC_ENABLE)
-    defer_exec(400, os_detect_callback, NULL);
 #endif
 }
 
