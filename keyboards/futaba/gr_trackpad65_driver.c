@@ -28,9 +28,6 @@
 #include "gr_trackpad65_driver.h"
 #include <math.h>
 
-#define CONSTRAIN_HID(amt) ((amt) < INT8_MIN ? INT8_MIN : ((amt) > INT8_MAX ? INT8_MAX : (amt)))
-#define CONSTRAIN_HID_XY(amt) ((amt) < XY_REPORT_MIN ? XY_REPORT_MIN : ((amt) > XY_REPORT_MAX ? XY_REPORT_MAX : (amt)))
-
 
 trackpad_config_t trackpad_config = {
     .reverse_vertical_scroll = false,

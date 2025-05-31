@@ -133,7 +133,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 int LOW_SPEED_RATIO = 2;
 int HIGH_SPEED_RATIO = 2;
-#define CONSTRAIN_HID_XY(amt) ((amt) < XY_REPORT_MIN ? XY_REPORT_MIN : ((amt) > XY_REPORT_MAX ? XY_REPORT_MAX : (amt)))
 
 report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
 
