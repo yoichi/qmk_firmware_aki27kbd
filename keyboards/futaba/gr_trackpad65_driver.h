@@ -83,11 +83,14 @@ typedef struct {
     bool    reverse_vertical_scroll;
     bool    reverse_horizontal_scroll;
     bool    disable_3fingers_tap;
+    bool    disable_tap;
+    uint8_t scroll_scale_percent;
 } trackpad_config_t;
 
 #define REVERSE_VERTICAL_SCROLL_MASK   0b0000000000000001
 #define REVERSE_HORIZONTAL_SCROLL_MASK 0b0000000000000010
-#define REVERSE_DISABLE_3FINGERS_MASK  0b0000000000000100
+#define DISABLE_3FINGERS_MASK          0b0000000000000100
+#define DISABLE_TAP_MASK               0b0000000000001000
 
 extern trackpad_config_t trackpad_config;
 
@@ -102,7 +105,9 @@ const static uint16_t FUTABA_MAX_TAP_TIME = 200;
 const static int WAIT_TIME_FOR_CURSOR_MOVEMENT = 100;
 const static int WAIT_TIME_FOR_MULTI_TAP_CURSOR_MOVEMENT = 200;
 
+#ifndef SCROLL_SCALE_PERCENT
 #define SCROLL_SCALE_PERCENT 5
+#endif
 
 void reset_trackpad_event(void);
 
