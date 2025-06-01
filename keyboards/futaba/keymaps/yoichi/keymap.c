@@ -40,11 +40,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
      */
     [0] = LAYOUT(
-   LT(2,KC_TAB), KC_Q,    KC_W,    KC_E,            KC_R,           KC_T, KC_DEL,  KC_F5,   KC_F2,   KC_Y,    KC_U,           KC_I,             KC_O,    KC_P, LT(1,KC_EQL),
- LCTL_T(KC_ESC), KC_A,    KC_S,    KC_D,            KC_F,           KC_G,                            KC_H,    KC_J,           KC_K,             KC_L,    KC_SCLN, RCTL_T(KC_MINS),
-        KC_LSFT, KC_Z,    KC_X,    KC_C,            KC_V,           KC_B,                            KC_N,    KC_M,           KC_COMM,          KC_DOT,  KC_SLSH, KC_RSFT,
-                 KC_LALT, KC_LGUI, KC_BTN1, LT(1, KC_SPC),  MO(3),         LOW_SPEED,    KC_BSPC,   LT(2, KC_ENT),  KC_BTN2,  KC_RALT, KC_RGUI
-               , KC_BTN3, PAD_3_UP, PAD_3_RGHT, PAD_3_DOWN, PAD_3_LEFT, KC_BTN3, PAD_4_UP, PAD_4_RGHT, PAD_4_DOWN, PAD_4_LEFT
+   LT(2,KC_TAB), KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,     MS_BTN1, MS_BTN3, MS_BTN2,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, LT(1,KC_EQL),
+ LCTL_T(KC_ESC), KC_A,    KC_S,    KC_D,   KC_F,    KC_G,                                   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, RCTL_T(KC_MINS),
+        KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,                                   KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
+                 KC_LALT, KC_LGUI, MS_BTN1, LT(1, KC_SPC),  MO(3),         LOW_SPEED,    KC_BSPC,   LT(2, KC_ENT),  MS_BTN2,  KC_RALT, KC_RGUI
+               , MS_BTN3, PAD_3_UP, PAD_3_RGHT, PAD_3_DOWN, PAD_3_LEFT, MS_BTN3, PAD_4_UP, PAD_4_RGHT, PAD_4_DOWN, PAD_4_LEFT
     ),
 
     [1] = LAYOUT(
@@ -231,7 +231,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         uint16_t code = C(KC_LEFT);
 #ifdef OS_DETECTION_ENABLE
         if (detected_host_os() == OS_WINDOWS) {
-          code = KC_BTN4;
+          code = MS_BTN4;
         }
 #endif
         if (record->event.pressed) {
@@ -246,7 +246,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         uint16_t code = C(KC_RGHT);
 #ifdef OS_DETECTION_ENABLE
         if (detected_host_os() == OS_WINDOWS) {
-          code = KC_BTN5;
+          code = MS_BTN5;
         }
 #endif
         if (record->event.pressed) {
