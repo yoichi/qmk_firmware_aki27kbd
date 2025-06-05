@@ -16,6 +16,7 @@ enum my_keycodes {
   DIS_TAP,
   ZOOM_IN,
   ZOOM_OUT,
+  IME_TGL,
   PAD_3_RGHT,
   PAD_3_LEFT,
   PAD_3_DOWN,
@@ -24,7 +25,6 @@ enum my_keycodes {
   PAD_4_LEFT,
   PAD_4_DOWN,
   PAD_4_UP,
-  IME_TGL,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -226,6 +226,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
 
+    case IME_TGL:
+      {
+        uint16_t mod = KC_LGUI;
+        uint16_t code = KC_SPC;
+#ifdef OS_DETECTION_ENABLE
+        if (detected_host_os() == OS_WINDOWS) {
+          mod = KC_RALT;
+          code = KC_GRV;
+        }
+#endif
+        if (record->event.pressed) {
+          register_code16(mod);
+          wait_ms(10);
+          tap_code16(code);
+          unregister_code16(mod);
+        }
+      }
+      return false;
+
     case PAD_3_RGHT:
       {
         uint16_t code = C(KC_LEFT);
@@ -344,25 +363,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           register_code16(code);
         } else {
           unregister_code16(code);
-        }
-      }
-      return false;
-
-    case IME_TGL:
-      {
-        uint16_t mod = KC_LGUI;
-        uint16_t code = KC_SPC;
-#ifdef OS_DETECTION_ENABLE
-        if (detected_host_os() == OS_WINDOWS) {
-          mod = KC_RALT;
-          code = KC_GRV;
-        }
-#endif
-        if (record->event.pressed) {
-          register_code16(mod);
-          wait_ms(10);
-          tap_code16(code);
-          unregister_code16(mod);
         }
       }
       return false;
