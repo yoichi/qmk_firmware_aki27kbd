@@ -37,6 +37,7 @@ enum custom_user_keycodes {
     IME_TGL = QK_USER_0,
     ZOOM_IN = QK_USER_1,
     ZOOM_OUT = QK_USER_2,
+    LOCK_PC = QK_USER_3,
 };
 
 
@@ -89,7 +90,7 @@ LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                     
 #endif
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                    KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      KC_BTN2,                IME_TGL, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
-                                                                 XXXXXXX, KC_MS_BTN3,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                                                                 XXXXXXX,    LOCK_PC,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
     ),
   [_LOWER] = LAYOUT(
@@ -336,6 +337,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code16(G(KC_MINS));
                 } else {
                     unregister_code16(G(KC_MINS));
+                }
+                return false;
+            }
+            break;
+        case LOCK_PC:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(G(KC_L));
+                } else {
+                    unregister_code16(G(KC_L));
+                }
+                return false;
+            case OS_MACOS:
+            default:
+                if (record->event.pressed) {
+                    register_code16(G(C(KC_Q)));
+                } else {
+                    unregister_code16(G(C(KC_Q)));
                 }
                 return false;
             }
