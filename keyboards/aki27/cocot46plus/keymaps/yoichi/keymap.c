@@ -44,35 +44,55 @@ enum custom_user_keycodes {
 #ifdef TAP_DANCE_ENABLE
 // Tap Dance
 enum {
-    TD_S_IME,
+    TD_PIPE_MO3,
 };
 
-void dance_s_ime_finished(tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        register_code16(KC_RSFT);
-    } else if (detected_host_os() == OS_WINDOWS) {
-        register_code16(KC_RALT);
-        wait_ms(10);
-        tap_code16(KC_GRV);
-        unregister_code16(KC_RALT);
-    } else {
-        register_code16(KC_LGUI);
-        wait_ms(10);
-        tap_code16(KC_SPC);
-        unregister_code16(KC_LGUI);
+typedef struct {
+    uint16_t tap;
+    uint16_t hold;
+    uint16_t held;
+} tap_dance_tap_hold_t;
+
+void tap_dance_tap_hold_finished(tap_dance_state_t *state, void *user_data) {
+    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
+
+    if (state->pressed) {
+        if (state->count == 1
+#ifndef PERMISSIVE_HOLD
+            && !state->interrupted
+#endif
+        ) {
+            if (QK_MOMENTARY <= tap_hold->hold && tap_hold->hold <= QK_MOMENTARY_MAX) {
+                layer_on(QK_MOMENTARY_GET_LAYER(tap_hold->hold));
+            } else {
+                register_code16(tap_hold->hold);
+            }
+            tap_hold->held = tap_hold->hold;
+        } else {
+            register_code16(tap_hold->tap);
+            tap_hold->held = tap_hold->tap;
+        }
     }
 }
 
-void dance_s_ime_reset(tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-        unregister_code16(KC_RSFT);
-    } else if (detected_host_os() == OS_WINDOWS) {
-    } else {
+void tap_dance_tap_hold_reset(tap_dance_state_t *state, void *user_data) {
+    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)user_data;
+
+    if (tap_hold->held) {
+        if (QK_MOMENTARY <= tap_hold->held && tap_hold->held <= QK_MOMENTARY_MAX) {
+            layer_off(QK_MOMENTARY_GET_LAYER(tap_hold->held));
+        } else {
+            unregister_code16(tap_hold->held);
+        }
+        tap_hold->held = 0;
     }
 }
+
+#define ACTION_TAP_DANCE_TAP_HOLD(tap, hold) \
+    { .fn = {NULL, tap_dance_tap_hold_finished, tap_dance_tap_hold_reset}, .user_data = (void *)&((tap_dance_tap_hold_t){tap, hold, 0}), }
 
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_S_IME] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_s_ime_finished, dance_s_ime_reset),
+    [TD_PIPE_MO3] = ACTION_TAP_DANCE_TAP_HOLD(S(KC_BSLS), MO(3)),
 };
 #endif // TAP_DANCE_ENABLE
 
@@ -83,11 +103,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
 LCTL_T(KC_ESC),   KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                                          KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, RCTL_T(KC_MINS),
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-#ifdef TAP_DANCE_ENABLE
-      KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, TD(TD_S_IME),
-#else
       KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                                          KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
-#endif
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                    KC_LALT, KC_LGUI, LT(1,KC_SPC), KC_BTN1,      KC_BTN2,                IME_TGL, KC_BSPC, LT(2,KC_ENT), KC_RGUI, RALT_T(KC_ESC),
                                                                  XXXXXXX,    LOCK_PC,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
@@ -107,7 +123,11 @@ LT(3,KC_QUOT),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                     
     ),
   [_RAISE] = LAYOUT(
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
+#ifdef TAP_DANCE_ENABLE
+   S(KC_QUOT), S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),                                       S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0),TD(TD_PIPE_MO3),
+#else
    S(KC_QUOT), S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5),                                       S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0),S(KC_BSLS),
+#endif
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______,S(KC_INT1),S(KC_INT3),S(KC_GRV),S(KC_LBRC),S(KC_RBRC),                       S(KC_LEFT),S(KC_DOWN),S(KC_UP),S(KC_RGHT), _______, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
@@ -140,30 +160,6 @@ LT(3,KC_QUOT),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                     
                         _______, _______, _______, _______,      _______,                _______, _______, _______, _______, _______,
                                                                  XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
                                                             //`--------------'  `--------------'
-    ),
-  [_Layer5] = LAYOUT(
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,             XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,
-                                                                 XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-                                                            //`--------------'  `--------------'
-    ),
-  [_Layer6] = LAYOUT(
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-  //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-                        XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,   XXXXXXX,             XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,
-                                                                 XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
-                                                            //`--------------'  `--------------'
     )
 };
 
@@ -174,8 +170,6 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(MS_WHLR, MS_WHLL) },
     [3] = { ENCODER_CCW_CW(ZOOM_OUT, ZOOM_IN) },
     [4] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI) },
-    [5] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
-    [6] = { ENCODER_CCW_CW(XXXXXXX, XXXXXXX) },
 };
 #endif
 
@@ -281,6 +275,17 @@ void keyboard_post_init_user(void) {
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
+#ifdef TAP_DANCE_ENABLE
+        case TD(TD_PIPE_MO3):  // list all tap dance keycodes with tap-hold configurations
+            {
+                tap_dance_action_t *action = &tap_dance_actions[QK_TAP_DANCE_GET_INDEX(keycode)];
+                if (!record->event.pressed && action->state.count && !action->state.finished) {
+                    tap_dance_tap_hold_t *tap_hold = (tap_dance_tap_hold_t *)action->user_data;
+                    tap_code16(tap_hold->tap);
+                }
+            }
+            break;
+#endif
 #if defined(OS_DETECTION_ENABLE)
         case IME_TGL:
             switch (detected_host_os()) {
@@ -361,37 +366,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 #endif
-        case KC_BSPC:
-            // https://docs.qmk.fm/feature_advanced_keycodes#shift-backspace-for-delete
-            {
-                // Initialize a boolean variable that keeps track
-                // of the delete key status: registered or not?
-                static bool delkey_registered;
-                uint8_t mod_state = get_mods();
-                if (record->event.pressed) {
-                    // Detect the activation of either shift keys
-                    if (mod_state & MOD_MASK_SHIFT) {
-                        // First temporarily canceling both shifts so that
-                        // shift isn't applied to the KC_DEL keycode
-                        del_mods(MOD_MASK_SHIFT);
-                        register_code(KC_DEL);
-                        // Update the boolean variable to reflect the status of KC_DEL
-                        delkey_registered = true;
-                        // Reapplying modifier state so that the held shift key(s)
-                        // still work even after having tapped the Backspace/Delete key.
-                        set_mods(mod_state);
-                        return false;
-                    }
-                } else { // on release of KC_BSPC
-                    // In case KC_DEL is still being sent even after the release of KC_BSPC
-                    if (delkey_registered) {
-                        unregister_code(KC_DEL);
-                        delkey_registered = false;
-                        return false;
-                    }
-                }
-            }
-            break;
         case MS_WHLU:
         case MS_WHLD:
             if (cocot_config.scrl_inv < 0) {
