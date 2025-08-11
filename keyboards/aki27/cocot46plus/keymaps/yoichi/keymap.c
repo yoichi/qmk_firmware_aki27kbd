@@ -35,8 +35,8 @@ enum layer_number {
 
 enum custom_user_keycodes {
     IME_TGL = QK_USER_0,
-    ZOOM_IN = QK_USER_1,
-    ZOOM_OUT = QK_USER_2,
+    VD_LEFT = QK_USER_1,
+    VD_RGHT = QK_USER_2,
     LOCK_PC = QK_USER_3,
 };
 
@@ -165,10 +165,10 @@ LT(3,KC_QUOT),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                     
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [0] = { ENCODER_CCW_CW(VD_RGHT, VD_LEFT) },
     [1] = { ENCODER_CCW_CW(MS_WHLU, MS_WHLD) },
     [2] = { ENCODER_CCW_CW(MS_WHLR, MS_WHLL) },
-    [3] = { ENCODER_CCW_CW(ZOOM_OUT, ZOOM_IN) },
+    [3] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [4] = { ENCODER_CCW_CW(RGB_HUD, RGB_HUI) },
 };
 #endif
@@ -308,44 +308,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 return false;
             }
             break;
-        case ZOOM_IN:
-            switch (detected_host_os()) {
-            case OS_WINDOWS:
-                if (record->event.pressed) {
-                    register_code16(C(KC_EQL));
-                } else {
-                    unregister_code16(C(KC_EQL));
-                }
-                return false;
-            case OS_MACOS:
-            default:
-                if (record->event.pressed) {
-                    register_code16(G(KC_EQL));
-                } else {
-                    unregister_code16(G(KC_EQL));
-                }
-                return false;
-            }
-            break;
-        case ZOOM_OUT:
-            switch (detected_host_os()) {
-            case OS_WINDOWS:
-                if (record->event.pressed) {
-                    register_code16(C(KC_MINS));
-                } else {
-                    unregister_code16(C(KC_MINS));
-                }
-                return false;
-            case OS_MACOS:
-            default:
-                if (record->event.pressed) {
-                    register_code16(G(KC_MINS));
-                } else {
-                    unregister_code16(G(KC_MINS));
-                }
-                return false;
-            }
-            break;
         case LOCK_PC:
             switch (detected_host_os()) {
             case OS_WINDOWS:
@@ -361,6 +323,44 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     register_code16(G(C(KC_Q)));
                 } else {
                     unregister_code16(G(C(KC_Q)));
+                }
+                return false;
+            }
+            break;
+        case VD_LEFT:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(RGUI(C(KC_LEFT)));
+                } else {
+                    unregister_code16(RGUI(C(KC_LEFT)));
+                }
+                return false;
+            case OS_MACOS:
+            default:
+                if (record->event.pressed) {
+                    register_code16(C(KC_LEFT));
+                } else {
+                    unregister_code16(C(KC_LEFT));
+                }
+                return false;
+            }
+            break;
+        case VD_RGHT:
+            switch (detected_host_os()) {
+            case OS_WINDOWS:
+                if (record->event.pressed) {
+                    register_code16(RGUI(C(KC_RGHT)));
+                } else {
+                    unregister_code16(RGUI(C(KC_RGHT)));
+                }
+                return false;
+            case OS_MACOS:
+            default:
+                if (record->event.pressed) {
+                    register_code16(C(KC_RGHT));
+                } else {
+                    unregister_code16(C(KC_RGHT));
                 }
                 return false;
             }
