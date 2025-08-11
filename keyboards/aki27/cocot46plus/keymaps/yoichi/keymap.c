@@ -268,7 +268,6 @@ const key_override_t *key_overrides[] = {
     &ko_make_basic(0, S(KC_0), JP_RPRN), // )
 
     &ko_make_basic(MOD_MASK_SHIFT, KC_SCLN, JP_COLN), // :
-    &ko_make_basic(0, S(KC_SCLN), JP_COLN), // :
 
 #ifdef TAP_DANCE_ENABLE
     &ko_make_basic(MOD_MASK_SHIFT, TD(TD_JP_EQL_MO_NUMBER), JP_PLUS), // +
