@@ -501,21 +501,21 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     uint16_t keycode;
     if (clockwise) {
         switch (layer) {
-            case 1:
+            case _NUMBER:
 #ifdef MOUSEKEY_ENABLE
                 keycode = MS_WHLD;
 #else
                 keycode = KC_UP;
 #endif
                 break;
-            case 2:
+            case _SYMBOL:
 #ifdef MOUSEKEY_ENABLE
                 keycode = MS_WHLL;
 #else
                 keycode = KC_RGHT;
 #endif
                 break;
-            case 3:
+            case _MEDIA:
 #if defined(OS_DETECTION_ENABLE)
                 if (detected_host_os() == OS_WINDOWS) {
                     keycode = C(KC_EQL);
@@ -524,7 +524,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 #endif
                 keycode = G(KC_EQL);
                 break;
-            case 4:
+            case _CONFIG:
                 // RGB_HUI cannot be handled by tap_code16_delay
                 rgblight_increase_hue();
                 return false;
@@ -533,21 +533,21 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
         }
     } else { // counter clockwise
         switch (layer) {
-            case 1:
+            case _NUMBER:
 #ifdef MOUSEKEY_ENABLE
                 keycode = MS_WHLU;
 #else
                 keycode = KC_DOWN;
 #endif
                 break;
-            case 2:
+            case _SYMBOL:
 #ifdef MOUSEKEY_ENABLE
                 keycode = MS_WHLR;
 #else
                 keycode = KC_LEFT;
 #endif
                 break;
-            case 3:
+            case _MEDIA:
 #if defined(OS_DETECTION_ENABLE)
                 if (detected_host_os() == OS_WINDOWS) {
                     keycode = C(KC_MINS);
@@ -556,7 +556,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 #endif
                 keycode = G(KC_MINS);
                 break;
-            case 4:
+            case _CONFIG:
                 // RGB_HUD cannot be handled by tap_code16_delay
                 rgblight_decrease_hue();
                 return false;
