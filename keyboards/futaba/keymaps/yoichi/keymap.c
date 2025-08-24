@@ -50,20 +50,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [1] = LAYOUT(
   LT(3,KC_QUOT),    KC_1,    KC_2,    KC_3,    KC_4,    KC_5, _______, _______, _______,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSLS,
         _______, KC_INT1, KC_INT3,  KC_GRV, KC_LBRC, KC_RBRC,                            KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT,  KC_INS, _______,
-        _______, _______,_______,S(KC_HOME),S(KC_END),KC_DEL,                            KC_QUOT, KC_BSLS, _______, _______, KC_CAPS, _______,
+        _______, KC_CAPS,_______,S(KC_HOME),S(KC_END),KC_DEL,                            _______, _______, KC_COMM,  KC_DOT, KC_SLSH, _______,
                  _______, _______, KC_HOME, _______,  KC_END,          _______,          _______, _______, _______, _______, _______
                , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [2] = LAYOUT(
      S(KC_QUOT), S(KC_1), S(KC_2), S(KC_3), S(KC_4), S(KC_5), _______, _______, _______, S(KC_6), S(KC_7), S(KC_8), S(KC_9), S(KC_0),S(KC_BSLS),
-_______,S(KC_INT1),S(KC_INT3),S(KC_GRV),S(KC_LBRC),S(KC_RBRC),                             KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
-      _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                              _______, _______, _______, _______, _______, _______,
+_______,S(KC_INT1),S(KC_INT3),S(KC_GRV),S(KC_LBRC),S(KC_RBRC),                    S(KC_LEFT),S(KC_DOWN),S(KC_UP),S(KC_RGHT), _______, _______,
+      _______,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_F11,
               _______, _______, _______,S(KC_HOME),S(KC_END),          KC_KB_MUTE,       _______, _______, _______, _______, _______
                , _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [3] = LAYOUT(
-          DF(4), G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), _______, _______, _______, G(KC_6), G(KC_7), G(KC_8), G(KC_9), KC_BRMU, KC_VOLU,
-   _______,S(KC_LEFT),S(KC_DOWN),S(KC_UP),S(KC_RGHT),KC_PGUP,                         C(KC_LEFT),C(KC_DOWN),C(KC_UP),C(KC_RGHT), KC_BRMD, KC_VOLD,
+          DF(4), G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5), _______, _______, _______, G(KC_6), G(KC_7), G(KC_8), G(KC_9), KC_BRIU, KC_VOLU,
+          _______, _______, _______, _______, _______, KC_PGUP,                         C(KC_LEFT),C(KC_DOWN),C(KC_UP),C(KC_RGHT), KC_BRID, KC_VOLD,
    _______,RWIN(KC_1),RWIN(KC_2),RWIN(KC_3),RWIN(KC_4),KC_PGDN,             RWIN(KC_LEFT),RWIN(KC_DOWN),RWIN(KC_UP),RWIN(KC_RGHT), _______, KC_MUTE,
                  _______, _______, _______  , _______, _______,        _______,          IME_TGL, _______, _______, _______, _______
                , _______, _______, _______  , _______, _______, _______  , _______, _______  , _______, _______
