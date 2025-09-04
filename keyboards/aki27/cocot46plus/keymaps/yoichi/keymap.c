@@ -264,14 +264,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     static uint16_t kc;
                     if (record->event.pressed) {
                         uint8_t mod_state = get_mods();
-                        if (mod_state & MOD_MASK_CTRL) {
+                        if (mod_state & MOD_MASK_SHIFT) {
+                            del_mods(MOD_MASK_SHIFT);
+                            kc = JP_PLUS;
+                        } else if (mod_state & MOD_MASK_CTRL) {
                             // treat Ctrl+= as Zoom-in like US layout (=, + are on the same key)
                             // cf. Ctrl+= is treated as Zoom-out in JP layout (-, = are on the same key)
                             del_mods(MOD_MASK_SHIFT);
                             kc = JP_SCLN; // ;, + are on the same key in JIS layout
-                        } else if (mod_state & MOD_MASK_SHIFT) {
-                            del_mods(MOD_MASK_SHIFT);
-                            kc = JP_PLUS;
                         } else {
                             kc = JP_EQL;
                         }
