@@ -60,7 +60,7 @@ LT(_MEDIA,KC_QUOT), KC_1,  KC_2,    KC_3,    KC_4,    KC_5,                     
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       _______, KC_INT1, KC_INT3,  KC_GRV, KC_LBRC, KC_RBRC,                                       KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT,  KC_INS, _______,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      KC_LSFT, KC_CAPS,_______,S(KC_HOME),S(KC_END),KC_DEL,                                       _______, _______, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
+      KC_LSFT, KC_CAPS,_______,S(KC_HOME),S(KC_END),KC_DEL,                                       KC_PSCR, _______, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
                         _______, KC_HOME, _______,  KC_END,      KC_LNG2,                KC_LNG1, IME_TGL, TT(_MEDIA), _______, RCTL(KC_RALT),
                                                                  XXXXXXX,    _______,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
