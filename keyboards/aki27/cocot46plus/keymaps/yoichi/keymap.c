@@ -82,7 +82,7 @@ LT(_MEDIA,KC_QUOT), KC_1,  KC_2,    KC_3,    KC_4,    KC_5,                     
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
   MO(_CONFIG), G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5),                                       G(KC_6), G(KC_7), G(KC_8), G(KC_9), KC_BRIU, KC_VOLU,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
-      QK_RBT,LCA(KC_DEL),LCA(KC_HOME),_______,_______,KC_PGUP,                                C(KC_LEFT),C(KC_DOWN),C(KC_UP),C(KC_RGHT), KC_BRID, KC_VOLD,
+      QK_RBT,LCA(KC_DEL),LCA(KC_HOME),S(G(KC_4)),_______,KC_PGUP,                          C(KC_LEFT),C(KC_DOWN),C(KC_UP),C(KC_RGHT), KC_BRID, KC_VOLD,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
       KC_LSFT, _______, _______, _______, _______, KC_PGDN,                        LCA(KC_LEFT),LCA(KC_DOWN),LCA(KC_UP),LCA(KC_RGHT), _______, KC_MUTE,
   //|-------------------------------------------------------|                                   |-------------------------------------------------------|
@@ -396,6 +396,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     wait_ms(10);
                     tap_code16(KC_SPC);
                     unregister_code16(KC_LGUI);
+                }
+                return false;
+            }
+            break;
+        case S(G(KC_4)): // screen capture
+            if (detected_host_os() == OS_WINDOWS) {
+                uint16_t kc = S(G(KC_S));
+                if (record->event.pressed) {
+                    register_code16(kc);
+                } else {
+                    unregister_code16(kc);
                 }
                 return false;
             }
